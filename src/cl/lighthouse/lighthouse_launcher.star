@@ -2,7 +2,8 @@ shared_utils = import_module("../../shared_utils/shared_utils.star")
 input_parser = import_module("../../package_io/input_parser.star")
 cl_context = import_module("../../cl/cl_context.star")
 node_metrics = import_module("../../node_metrics_info.star")
-cl_node_ready_conditions = import_module("../../cl/cl_node_ready_conditions.star")
+cl_node_ready_conditions = import_module(
+    "../../cl/cl_node_ready_conditions.star")
 constants = import_module("../../package_io/constants.star")
 
 blobber_launcher = import_module("../../blobber/blobber_launcher.star")
@@ -167,7 +168,8 @@ def launch(
             node_selectors,
         )
 
-        blobber_service = plan.add_service(blobber_service_name, blobber_config)
+        blobber_service = plan.add_service(
+            blobber_service_name, blobber_config)
         blobber_http_port = blobber_service.ports[
             blobber_launcher.BLOBBER_VALIDATOR_PROXY_PORT_ID
         ]
@@ -281,8 +283,8 @@ def get_beacon_config(
         "--http",
         "--http-address=0.0.0.0",
         "--http-port={0}".format(BEACON_HTTP_PORT_NUM),
-        "--http-allow-sync-stalled",
-        "--slots-per-restore-point={0}".format(32 if constants.ARCHIVE_MODE else 8192),
+        "--slots-per-restore-point={0}".format(
+            32 if constants.ARCHIVE_MODE else 8192),
         # NOTE: This comes from:
         #   https://github.com/sigp/lighthouse/blob/7c88f582d955537f7ffff9b2c879dcf5bf80ce13/scripts/local_testnet/beacon_node.sh
         # and the option says it's "useful for testing in smaller networks" (unclear what happens in larger networks)
@@ -304,7 +306,8 @@ def get_beacon_config(
     ]
 
     if network not in constants.PUBLIC_NETWORKS:
-        cmd.append("--testnet-dir=" + constants.GENESIS_CONFIG_MOUNT_PATH_ON_CONTAINER)
+        cmd.append("--testnet-dir=" +
+                   constants.GENESIS_CONFIG_MOUNT_PATH_ON_CONTAINER)
         if (
             network == constants.NETWORK_NAME.kurtosis
             or constants.NETWORK_NAME.shadowfork in network
@@ -321,7 +324,8 @@ def get_beacon_config(
                 )
         elif network == constants.NETWORK_NAME.ephemery:
             cmd.append(
-                "--checkpoint-sync-url=" + constants.CHECKPOINT_SYNC_URL[network]
+                "--checkpoint-sync-url=" +
+                constants.CHECKPOINT_SYNC_URL[network]
             )
             cmd.append(
                 "--boot-nodes="
@@ -345,7 +349,8 @@ def get_beacon_config(
             )
     else:  # Public networks
         cmd.append("--network=" + network)
-        cmd.append("--checkpoint-sync-url=" + constants.CHECKPOINT_SYNC_URL[network])
+        cmd.append("--checkpoint-sync-url=" +
+                   constants.CHECKPOINT_SYNC_URL[network])
 
     if len(extra_params) > 0:
         # this is a repeated<proto type>, we convert it into Starlark
